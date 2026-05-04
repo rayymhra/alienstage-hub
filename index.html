@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALIENSTAGE HUB</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg-primary: #000000;
+  --bg-secondary: #07070f;
+  --bg-card: rgba(10, 10, 20, 0.8);
+  --bg-card-hover: rgba(16, 16, 30, 0.95);
+  --text-primary: #e4e4f0;
+  --text-secondary: #9898b8;
+  --text-muted: #555570;
+  --accent-cyan: #00d4ff;
+  --accent-red: #ff4466;
+  --accent-purple: #8b5cf6;
+  --border: rgba(100, 100, 160, 0.12);
+  --border-hover: rgba(0, 212, 255, 0.35);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --nav-h: 64px;
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.25); border-radius: 3px; }
+a { color: var(--accent-cyan); text-decoration: none; transition: color 0.3s; }
+a:hover { color: #fff; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:1000;
+  height: var(--nav-h);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 clamp(20px, 4vw, 48px);
+  transition: background 0.4s, box-shadow 0.4s;
+  background: transparent;
+}
+nav.scrolled {
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 var(--border);
+}
+.nav-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700; font-size: 1rem;
+  letter-spacing: 3px;
+  color: var(--accent-cyan);
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 0.85rem; font-weight: 500;
+  color: var(--text-secondary);
+  position: relative; padding: 4px 0;
+  transition: color 0.3s;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-2px; left:0;
+  width:0; height:2px;
+  background: var(--accent-cyan);
+  box-shadow: 0 0 8px var(--accent-cyan);
+  transition: width 0.3s;
+}
+.nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); }
+.nav-links a:hover::after, .nav-links a.active::after { width:100%; }
+.hamburger {
+  display:none; background:none; border:none;
+  color: var(--text-primary); font-size:1.4rem; cursor:pointer;
+}
+.mobile-menu {
+  display:none; position:fixed; top:var(--nav-h); left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.95); backdrop-filter: blur(20px);
+  z-index:999; flex-direction:column; align-items:center; justify-content:center; gap:32px;
+}
+.mobile-menu.open { display:flex; }
+.mobile-menu a {
+  font-family:'Orbitron',sans-serif; font-size:1.2rem;
+  color: var(--text-secondary); letter-spacing:2px;
+  transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--accent-cyan); }
+
+/* ── STARFIELD CANVAS ── */
+#starfield {
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  z-index:0; pointer-events:none;
+}
+
+/* ── PAGES ── */
+.page {
+  display:none; opacity:0;
+  position:relative; z-index:1;
+  min-height:100vh;
+  padding-top: var(--nav-h);
+}
+.page.active {
+  display:block;
+  animation: pageFadeIn 0.6s ease forwards;
+}
+@keyframes pageFadeIn {
+  from { opacity:0; transform:translateY(16px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.container { max-width:1200px; margin:0 auto; padding:0 clamp(16px,4vw,48px); }
+
+/* ── HERO ── */
+.hero {
+  min-height: calc(100vh - var(--nav-h));
+  display:flex; align-items:center; justify-content:center;
+  text-align:center; position:relative;
+  overflow:hidden;
+}
+.hero::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:200px;
+  background: linear-gradient(to top, var(--bg-primary), transparent);
+  pointer-events:none;
+}
+.hero-content { position:relative; z-index:2; }
+.hero-title {
+  font-family:'Orbitron',sans-serif;
+  font-size: clamp(2.4rem,7vw,5rem);
+  font-weight:900; letter-spacing:6px;
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, #a78bfa 50%, var(--accent-red) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation: heroGlow 4s ease-in-out infinite alternate;
+}
+@keyframes heroGlow {
+  0% { filter: drop-shadow(0 0 20px rgba(0,212,255,0.3)); }
+  100% { filter: drop-shadow(0 0 40px rgba(139,92,246,0.4)); }
+}
+.hero-subtitle {
+  font-size: clamp(0.95rem,2vw,1.2rem);
+  color: var(--text-secondary);
+  margin-top:20px; min-height:1.8em;
+  font-weight:300; letter-spacing:0.5px;
+}
+.hero-subtitle .cursor {
+  display:inline-block; width:2px; height:1.1em;
+  background:var(--accent-cyan); margin-left:2px;
+  vertical-align:text-bottom;
+  animation: blink 0.8s step-end infinite;
+}
+@keyframes blink { 50%{opacity:0;} }
+.hero-buttons { display:flex; gap:16px; justify-content:center; margin-top:40px; flex-wrap:wrap; }
+.btn {
+  display:inline-flex; align-items:center; gap:8px;
+  padding: 14px 32px;
+  font-family:'Poppins',sans-serif; font-size:0.9rem; font-weight:500;
+  border:none; border-radius: var(--radius-sm);
+  cursor:pointer; transition: all 0.3s;
+  position:relative; overflow:hidden;
+}
+.btn-outline {
+  background:transparent;
+  border:1px solid rgba(0,212,255,0.4);
+  color: var(--accent-cyan);
+}
+.btn-outline:hover {
+  background: rgba(0,212,255,0.08);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 24px rgba(0,212,255,0.15), inset 0 0 24px rgba(0,212,255,0.05);
+  transform: translateY(-2px);
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  color:#000; font-weight:600;
+}
+.btn-primary:hover {
+  box-shadow: 0 0 30px rgba(0,212,255,0.3);
+  transform: translateY(-2px);
+}
+.btn-red {
+  background:transparent;
+  border:1px solid rgba(255,68,102,0.4);
+  color: var(--accent-red);
+}
+.btn-red:hover {
+  background: rgba(255,68,102,0.08);
+  border-color: var(--accent-red);
+  box-shadow: 0 0 24px rgba(255,68,102,0.15);
+  transform: translateY(-2px);
+}
+.btn-sm { padding:10px 20px; font-size:0.82rem; }
+
+/* ── SECTION HEADERS ── */
+.section-header {
+  text-align:center; margin-bottom:48px;
+}
+.section-tag {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.7rem; font-weight:600;
+  letter-spacing:4px; text-transform:uppercase;
+  color: var(--accent-cyan); margin-bottom:12px;
+  display:block;
+}
+.section-title {
+  font-family:'Orbitron',sans-serif;
+  font-size: clamp(1.6rem,4vw,2.4rem);
+  font-weight:700; color:#fff;
+}
+.section-line {
+  width:60px; height:2px; margin:16px auto 0;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+  border-radius:2px;
+}
+
+/* ── CHARACTER CARDS ── */
+.char-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap:24px;
+}
+.char-card {
+  background: var(--bg-card);
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  overflow:hidden; cursor:pointer;
+  transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+  position:relative;
+}
+.char-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--border-hover);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,212,255,0.08);
+  background: var(--bg-card-hover);
+}
+.char-card-img {
+  width:100%; aspect-ratio:4/5;
+  object-fit:cover; display:block;
+  transition: transform 0.6s;
+  filter: brightness(0.85) saturate(0.9);
+}
+.char-card:hover .char-card-img {
+  transform: scale(1.05);
+  filter: brightness(1) saturate(1);
+}
+.char-card-overlay {
+  position:absolute; top:0; left:0; right:0;
+  height:60%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.3), transparent);
+  pointer-events:none;
+}
+.char-card-body { padding:20px; position:relative; }
+.char-card-name {
+  font-family:'Orbitron',sans-serif;
+  font-size:1.1rem; font-weight:700; color:#fff;
+}
+.char-card-desc {
+  font-size:0.82rem; color:var(--text-secondary);
+  margin-top:4px;
+}
+.char-card-quote {
+  position:absolute; bottom:20px; left:20px; right:20px;
+  font-size:0.78rem; font-style:italic; color:var(--accent-cyan);
+  opacity:0; transform:translateY(8px);
+  transition: all 0.4s; pointer-events:none;
+}
+.char-card:hover .char-card-quote {
+  opacity:1; transform:translateY(0);
+}
+.char-card-tags {
+  display:flex; gap:6px; margin-top:10px; flex-wrap:wrap;
+}
+.tag {
+  font-size:0.65rem; font-weight:600;
+  padding:3px 10px; border-radius:20px;
+  letter-spacing:0.5px; text-transform:uppercase;
+}
+.tag-cyan { background:rgba(0,212,255,0.1); color:var(--accent-cyan); border:1px solid rgba(0,212,255,0.2); }
+.tag-red { background:rgba(255,68,102,0.1); color:var(--accent-red); border:1px solid rgba(255,68,102,0.2); }
+.tag-purple { background:rgba(139,92,246,0.1); color:var(--accent-purple); border:1px solid rgba(139,92,246,0.2); }
+
+/* ── CHARACTER DETAIL ── */
+.detail-back {
+  display:inline-flex; align-items:center; gap:8px;
+  color:var(--text-secondary); font-size:0.85rem;
+  cursor:pointer; transition:color 0.3s;
+  margin-bottom:24px; background:none; border:none;
+  font-family:'Poppins',sans-serif;
+}
+.detail-back:hover { color:var(--accent-cyan); }
+.detail-hero {
+  display:grid; grid-template-columns:350px 1fr; gap:40px;
+  align-items:start; margin-bottom:48px;
+}
+.detail-img-wrap {
+  position:relative; border-radius:var(--radius);
+  overflow:hidden; aspect-ratio:4/5;
+  border:1px solid var(--border);
+}
+.detail-img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter: brightness(0.9);
+}
+.detail-img-gradient {
+  position:absolute; bottom:0; left:0; right:0; height:50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+.detail-info { padding-top:16px; }
+.detail-name {
+  font-family:'Orbitron',sans-serif;
+  font-size: clamp(2rem,5vw,3rem);
+  font-weight:900; color:#fff;
+  line-height:1.1;
+}
+.detail-role {
+  font-size:1rem; color:var(--accent-cyan);
+  margin-top:8px; font-weight:500;
+}
+.detail-status {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:0.82rem; margin-top:8px;
+  padding:4px 14px; border-radius:20px;
+}
+.status-alive { background:rgba(0,212,255,0.1); color:var(--accent-cyan); }
+.status-deceased { background:rgba(255,68,102,0.1); color:var(--accent-red); }
+.status-unknown { background:rgba(139,92,246,0.1); color:var(--accent-purple); }
+.detail-tags { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; }
+.detail-quote {
+  font-size:1.15rem; font-style:italic;
+  color:var(--text-secondary); margin-top:24px;
+  padding-left:20px; border-left:2px solid var(--accent-cyan);
+  line-height:1.7;
+}
+
+/* ── TABS ── */
+.tabs { display:flex; gap:4px; margin-bottom:32px; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+.tab-btn {
+  background:none; border:none;
+  font-family:'Poppins',sans-serif;
+  font-size:0.85rem; font-weight:500;
+  color:var(--text-muted); padding:12px 20px;
+  cursor:pointer; position:relative;
+  transition:color 0.3s;
+}
+.tab-btn:hover { color:var(--text-secondary); }
+.tab-btn.active { color:var(--accent-cyan); }
+.tab-btn.active::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0;
+  height:2px; background:var(--accent-cyan);
+  box-shadow:0 0 8px var(--accent-cyan);
+}
+.tab-panel { display:none; animation: pageFadeIn 0.4s ease; }
+.tab-panel.active { display:block; }
+
+/* ── LORE TIMELINE ── */
+.timeline { position:relative; padding-left:28px; }
+.timeline::before {
+  content:''; position:absolute; left:8px; top:0; bottom:0;
+  width:1px; background:linear-gradient(to bottom, var(--accent-cyan), var(--accent-purple), transparent);
+}
+.timeline-item { position:relative; margin-bottom:32px; }
+.timeline-dot {
+  position:absolute; left:-24px; top:4px;
+  width:12px; height:12px; border-radius:50%;
+  background:var(--bg-primary);
+  border:2px solid var(--accent-cyan);
+  box-shadow:0 0 8px rgba(0,212,255,0.3);
+}
+.timeline-title {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.85rem; font-weight:600;
+  color:var(--accent-cyan); margin-bottom:6px;
+}
+.timeline-desc { font-size:0.9rem; color:var(--text-secondary); line-height:1.7; }
+
+/* ── RELATIONSHIPS ── */
+.rel-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+.rel-card {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:20px;
+  transition:all 0.3s; cursor:pointer;
+}
+.rel-card:hover {
+  border-color:var(--border-hover);
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+}
+.rel-name { font-family:'Orbitron',sans-serif; font-size:0.95rem; font-weight:600; color:#fff; }
+.rel-type { font-size:0.75rem; color:var(--accent-purple); margin-top:2px; }
+.rel-desc { font-size:0.85rem; color:var(--text-secondary); margin-top:8px; line-height:1.6; }
+
+/* ── QUOTES ── */
+.quote-block {
+  padding:28px 32px; margin-bottom:20px;
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); position:relative;
+  border-left:3px solid var(--accent-cyan);
+}
+.quote-text {
+  font-size:1.05rem; font-style:italic; color:var(--text-primary);
+  line-height:1.8;
+}
+.quote-context {
+  font-size:0.78rem; color:var(--text-muted); margin-top:10px;
+}
+
+/* ── EXPLORER MODE ── */
+.explorer-toggle {
+  display:flex; align-items:center; gap:12px;
+  padding:16px 24px; margin:40px 0 24px;
+  background:rgba(139,92,246,0.06);
+  border:1px solid rgba(139,92,246,0.2);
+  border-radius:var(--radius); cursor:pointer;
+  color:var(--accent-purple); font-weight:500;
+  transition:all 0.3s; width:100%;
+  font-family:'Poppins',sans-serif; font-size:0.9rem;
+}
+.explorer-toggle:hover {
+  background:rgba(139,92,246,0.1);
+  border-color:rgba(139,92,246,0.4);
+  box-shadow:0 0 30px rgba(139,92,246,0.1);
+}
+.explorer-toggle.active {
+  background:rgba(139,92,246,0.12);
+  border-color:var(--accent-purple);
+  box-shadow:0 0 40px rgba(139,92,246,0.15);
+}
+.explorer-badge {
+  display:none; position:fixed; top:calc(var(--nav-h)+12px); right:20px;
+  background:rgba(139,92,246,0.15); border:1px solid var(--accent-purple);
+  color:var(--accent-purple); font-family:'Orbitron',sans-serif;
+  font-size:0.6rem; letter-spacing:2px; font-weight:600;
+  padding:6px 14px; border-radius:20px; z-index:100;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+.explorer-badge.visible { display:block; }
+@keyframes badgePulse {
+  0%,100%{ opacity:1; } 50%{ opacity:0.6; }
+}
+.hidden-lore {
+  display:none;
+  animation: loreReveal 0.6s ease;
+}
+.hidden-lore.visible { display:block; }
+@keyframes loreReveal {
+  from { opacity:0; transform:translateY(12px); filter:blur(4px); }
+  to { opacity:1; transform:translateY(0); filter:blur(0); }
+}
+.lore-block {
+  background:rgba(139,92,246,0.04);
+  border:1px solid rgba(139,92,246,0.15);
+  border-radius:var(--radius); padding:20px;
+  margin-bottom:16px;
+}
+.lore-block-title {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.8rem; font-weight:600;
+  color:var(--accent-purple); margin-bottom:8px;
+  display:flex; align-items:center; gap:8px;
+}
+.lore-block-text { font-size:0.88rem; color:var(--text-secondary); line-height:1.7; }
+
+/* ── GALLERY ── */
+.filter-bar {
+  display:flex; gap:8px; margin-bottom:32px; flex-wrap:wrap;
+  justify-content:center;
+}
+.filter-btn {
+  background:var(--bg-card); border:1px solid var(--border);
+  color:var(--text-secondary); padding:8px 18px;
+  border-radius:20px; cursor:pointer; font-size:0.8rem;
+  font-family:'Poppins',sans-serif; font-weight:500;
+  transition:all 0.3s;
+}
+.filter-btn:hover { border-color:var(--border-hover); color:var(--text-primary); }
+.filter-btn.active {
+  background:rgba(0,212,255,0.1);
+  border-color:var(--accent-cyan);
+  color:var(--accent-cyan);
+}
+.gallery-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+  gap:20px;
+}
+.gallery-item {
+  border-radius:var(--radius); overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--bg-card);
+  transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+}
+.gallery-item.filtered-out {
+  opacity:0; transform:scale(0.9);
+  pointer-events:none; position:absolute; width:0; height:0; overflow:hidden; margin:0; padding:0; border:none;
+}
+.gallery-item:hover {
+  transform:translateY(-6px);
+  border-color:var(--border-hover);
+  box-shadow:0 16px 48px rgba(0,0,0,0.5);
+}
+.gallery-item img {
+  width:100%; aspect-ratio:3/2; object-fit:cover; display:block;
+  transition:transform 0.6s; filter:brightness(0.85);
+}
+.gallery-item:hover img { transform:scale(1.05); filter:brightness(1); }
+.gallery-caption {
+  padding:14px 16px;
+  font-size:0.82rem; color:var(--text-secondary);
+}
+.gallery-caption strong { color:var(--text-primary); font-weight:600; }
+
+/* ── THEORIES ── */
+.theory-list { display:flex; flex-direction:column; gap:20px; max-width:800px; margin:0 auto; }
+.theory-card {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden;
+  transition:all 0.3s;
+}
+.theory-card:hover { border-color:rgba(255,68,102,0.2); }
+.theory-header {
+  padding:24px; cursor:pointer;
+  display:flex; justify-content:space-between; align-items:flex-start; gap:16px;
+}
+.theory-title {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.95rem; font-weight:600; color:#fff;
+  line-height:1.4;
+}
+.theory-teaser {
+  font-size:0.85rem; color:var(--text-secondary); margin-top:6px; line-height:1.6;
+}
+.theory-toggle {
+  background:none; border:none; color:var(--accent-red);
+  font-size:1.2rem; cursor:pointer; flex-shrink:0;
+  padding:4px; transition:transform 0.3s;
+}
+.theory-toggle.open { transform:rotate(180deg); }
+.theory-body {
+  max-height:0; overflow:hidden;
+  transition:max-height 0.5s cubic-bezier(0.23,1,0.32,1);
+}
+.theory-body.open { max-height:600px; }
+.theory-body-inner {
+  padding:0 24px 24px;
+  font-size:0.9rem; color:var(--text-secondary); line-height:1.8;
+  border-top:1px solid var(--border);
+  padding-top:20px;
+}
+.theory-evidence {
+  margin-top:12px; padding:12px 16px;
+  background:rgba(255,68,102,0.04);
+  border-left:2px solid var(--accent-red);
+  border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  font-size:0.82rem; color:var(--text-muted);
+}
+.theory-evidence strong { color:var(--accent-red); font-weight:600; }
+
+/* ── ABOUT ── */
+.about-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:40px;
+  align-items:start;
+}
+.about-card {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:32px;
+}
+.about-card h3 {
+  font-family:'Orbitron',sans-serif;
+  font-size:1rem; font-weight:600; color:#fff; margin-bottom:16px;
+}
+.about-card p { font-size:0.9rem; color:var(--text-secondary); line-height:1.8; }
+.about-card ul { list-style:none; margin-top:12px; }
+.about-card li {
+  font-size:0.88rem; color:var(--text-secondary);
+  padding:8px 0; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:10px;
+}
+.about-card li:last-child { border-bottom:none; }
+.about-card li i { color:var(--accent-cyan); width:16px; text-align:center; }
+
+/* ── SEARCH ── */
+.search-wrap {
+  max-width:400px; margin:0 auto 40px; position:relative;
+}
+.search-wrap input {
+  width:100%; padding:14px 20px 14px 48px;
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:var(--radius); color:var(--text-primary);
+  font-family:'Poppins',sans-serif; font-size:0.9rem;
+  outline:none; transition:border-color 0.3s;
+}
+.search-wrap input::placeholder { color:var(--text-muted); }
+.search-wrap input:focus { border-color:var(--accent-cyan); }
+.search-wrap i {
+  position:absolute; left:18px; top:50%; transform:translateY(-50%);
+  color:var(--text-muted); font-size:0.9rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  position:relative; z-index:1;
+  text-align:center; padding:40px 20px;
+  border-top:1px solid var(--border);
+  color:var(--text-muted); font-size:0.8rem;
+}
+footer .footer-logo {
+  font-family:'Orbitron',sans-serif;
+  font-size:0.75rem; letter-spacing:3px;
+  color:var(--text-secondary); margin-bottom:8px;
+}
+
+/* ── IDENTITY TABLE ── */
+.id-table { width:100%; }
+.id-row {
+  display:flex; padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.id-row:last-child { border-bottom:none; }
+.id-label {
+  width:140px; flex-shrink:0;
+  font-family:'Orbitron',sans-serif;
+  font-size:0.72rem; font-weight:600;
+  color:var(--text-muted); letter-spacing:1px;
+  text-transform:uppercase; padding-top:2px;
+}
+.id-value { font-size:0.92rem; color:var(--text-primary); }
+
+/* ── SCANLINE OVERLAY ── */
+.scanline-overlay {
+  position:fixed; top:0; left:0; right:0; bottom:0;
+  pointer-events:none; z-index:998;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(139,92,246,0.015) 2px,
+    rgba(139,92,246,0.015) 4px
+  );
+  opacity:0; transition:opacity 0.6s;
+}
+.scanline-overlay.active { opacity:1; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px) {
+  .nav-links { display:none; }
+  .hamburger { display:block; }
+  .detail-hero { grid-template-columns:1fr; }
+  .detail-img-wrap { max-width:300px; margin:0 auto; }
+  .about-grid { grid-template-columns:1fr; }
+  .char-grid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); }
+  .gallery-grid { grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); }
+}
+@media(max-width:480px) {
+  .hero-title { letter-spacing:2px; }
+  .hero-buttons { flex-direction:column; align-items:center; }
+  .tabs { gap:0; }
+  .tab-btn { padding:10px 14px; font-size:0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Starfield -->
+<canvas id="starfield"></canvas>
+
+<!-- Scanline overlay for explorer mode -->
+<div class="scanline-overlay" id="scanlineOverlay"></div>
+
+<!-- Explorer mode badge -->
+<div class="explorer-badge" id="explorerBadge">EXPLORER MODE</div>
+
+<!-- Navigation -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="navigateTo('home')">ALIENSTAGE HUB</div>
+  <ul class="nav-links">
+    <li><a href="#" data-page="home" class="active" onclick="navigateTo('home');return false;">Home</a></li>
+    <li><a href="#" data-page="characters" onclick="navigateTo('characters');return false;">Characters</a></li>
+    <li><a href="#" data-page="gallery" onclick="navigateTo('gallery');return false;">Gallery</a></li>
+    <li><a href="#" data-page="theories" onclick="navigateTo('theories');return false;">Theories</a></li>
+    <li><a href="#" data-page="about" onclick="navigateTo('about');return false;">About</a></li>
+  </ul>
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+    <i class="fas fa-bars"></i>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="navigateTo('home');toggleMobileMenu();return false;">HOME</a>
+  <a href="#" onclick="navigateTo('characters');toggleMobileMenu();return false;">CHARACTERS</a>
+  <a href="#" onclick="navigateTo('gallery');toggleMobileMenu();return false;">GALLERY</a>
+  <a href="#" onclick="navigateTo('theories');toggleMobileMenu();return false;">THEORIES</a>
+  <a href="#" onclick="navigateTo('about');toggleMobileMenu();return false;">ABOUT</a>
+</div>
+
+<!-- ═══════════ HOME PAGE ═══════════ -->
+<div class="page active" id="page-home">
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">ALIENSTAGE HUB</h1>
+      <p class="hero-subtitle" id="heroSubtitle"></p>
+      <div class="hero-buttons">
+        <button class="btn btn-outline" onclick="navigateTo('characters')">
+          <i class="fas fa-users"></i> Explore Characters
+        </button>
+        <button class="btn btn-primary" onclick="navigateTo('characters')">
+          <i class="fas fa-door-open"></i> Enter Archive
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Characters -->
+  <section style="padding:80px 0 60px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Featured Subjects</span>
+        <h2 class="section-title">Voices of the Stage</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="char-grid" id="featuredChars"></div>
+    </div>
+  </section>
+
+  <!-- Fanart Preview -->
+  <section style="padding:60px 0 80px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Visual Archive</span>
+        <h2 class="section-title">Latest Fanart</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="gallery-grid" id="homeGallery" style="grid-template-columns:repeat(3,1fr);"></div>
+      <div style="text-align:center;margin-top:36px;">
+        <button class="btn btn-outline btn-sm" onclick="navigateTo('gallery')">
+          <i class="fas fa-images"></i> View Full Gallery
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Theory Teaser -->
+  <section style="padding:60px 0 100px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Unanswered Questions</span>
+        <h2 class="section-title">Fan Theories</h2>
+        <div class="section-line"></div>
+      </div>
+      <div style="max-width:700px;margin:0 auto;">
+        <div id="homeTheories"></div>
+        <div style="text-align:center;margin-top:36px;">
+          <button class="btn btn-red btn-sm" onclick="navigateTo('theories')">
+            <i class="fas fa-brain"></i> Read All Theories
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ CHARACTERS PAGE ═══════════ -->
+<div class="page" id="page-characters">
+  <section style="padding:80px 0 100px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Character Archive</span>
+        <h2 class="section-title">All Subjects</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search characters..." id="charSearch" oninput="filterCharacters()">
+      </div>
+      <div class="char-grid" id="allChars"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ CHARACTER DETAIL PAGE ═══════════ -->
+<div class="page" id="page-detail">
+  <section style="padding:40px 0 100px;">
+    <div class="container" id="detailContent"></div>
+  </section>
+</div>
+
+<!-- ═══════════ GALLERY PAGE ═══════════ -->
+<div class="page" id="page-gallery">
+  <section style="padding:80px 0 100px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Visual Archive</span>
+        <h2 class="section-title">Fan Gallery</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="filter-bar" id="galleryFilters"></div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ THEORIES PAGE ═══════════ -->
+<div class="page" id="page-theories">
+  <section style="padding:80px 0 100px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Deep Dive</span>
+        <h2 class="section-title">Fan Theories</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="theory-list" id="theoryList"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════ ABOUT PAGE ═══════════ -->
+<div class="page" id="page-about">
+  <section style="padding:80px 0 100px;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Information</span>
+        <h2 class="section-title">About This Archive</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-card">
+          <h3><i class="fas fa-database" style="color:var(--accent-cyan);margin-right:8px;"></i>What is AlienStage Hub?</h3>
+          <p>AlienStage Hub is a fan-curated archive dedicated to the Alien Stage animated series. It serves as a comprehensive resource for character lore, fan interpretations, visual creations, and community theories.</p>
+          <p style="margin-top:12px;">This project was built out of love for the characters and stories that Alien Stage has brought to life — and the voices that were silenced on its stage.</p>
+        </div>
+        <div class="about-card">
+          <h3><i class="fas fa-triangle-exclamation" style="color:var(--accent-red);margin-right:8px;"></i>Disclaimer</h3>
+          <p>This is a <strong style="color:#fff;">fan-made</strong> website and is not affiliated with, endorsed by, or connected to the official Alien Stage team or its creators.</p>
+          <p style="margin-top:12px;">All character lore belongs to the original series. Fanart is credited to respective artists. Theories represent community interpretations, not canon.</p>
+        </div>
+        <div class="about-card">
+          <h3><i class="fas fa-wrench" style="color:var(--accent-purple);margin-right:8px;"></i>Built With</h3>
+          <ul>
+            <li><i class="fas fa-code"></i> Vanilla HTML, CSS, JavaScript</li>
+            <li><i class="fas fa-palette"></i> Custom dark theme design</li>
+            <li><i class="fas fa-font"></i> Orbitron + Poppins typefaces</li>
+            <li><i class="fas fa-star"></i> Canvas starfield particle system</li>
+            <li><i class="fas fa-toggle-on"></i> Explorer Mode hidden lore system</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <h3><i class="fas fa-link" style="color:var(--accent-cyan);margin-right:8px;"></i>Links</h3>
+          <ul>
+            <li><i class="fab fa-youtube"></i> Alien Stage on YouTube</li>
+            <li><i class="fab fa-twitter"></i> Official updates</li>
+            <li><i class="fas fa-heart"></i> Community fan spaces</li>
+            <li><i class="fas fa-music"></i> Alien Stage OST</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-logo">ALIENSTAGE HUB</div>
+  <p>A fan-made archive. Not affiliated with Alien Stage.</p>
+  <p style="margin-top:4px;opacity:0.5;">Built with care for the voices that remain.</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA
+   ══════════════════════════════════════════ */
+const characters = [
+  {
+    id:'luka', name:'Luka', role:'Round 6 Contestant', status:'Alive',
+    statusClass:'status-alive', statusIcon:'fa-circle',
+    tags:[{text:'Victorious',cls:'tag-cyan'},{text:'Calculating',cls:'tag-purple'},{text:'Mysterious',cls:'tag-purple'}],
+    descriptor:'The champion who plays with hearts',
+    image:'https://picsum.photos/seed/als-luka-v3/400/520.jpg',
+    quote:'"You were always so easy to read."',
+    identity:{
+      'Full Name':'Luka',
+      'Alias':'None known',
+      'Round':'Round 6',
+      'Affiliation':'Anakt Garden Graduate',
+      'Vocal Style':'Hauntingly precise, emotionally manipulative',
+      'Notes':'Displays unusual control over his vocal abilities. His performances are described as suffocatingly perfect — each note placed with surgical intent.'
+    },
+    lore:[
+      {event:'Anakt Garden', desc:'Raised within Anakt Garden alongside other contestants. Showed early signs of extraordinary vocal talent and an unsettling ability to read and exploit emotional vulnerability in others.'},
+      {event:'Pre-Round 6 — Observation', desc:'Spent extensive time studying his assigned opponent from the shadows. Reports suggest he mapped their psychological profile with disturbing accuracy before ever stepping on stage.'},
+      {event:'Round 6 — Performance', desc:'Delivered a performance that systematically dismantled his opponent\'s composure. His voice was described as both beautiful and weaponized — a lullaby that became a death sentence.'},
+      {event:'After Round 6', desc:'His victory was celebrated by the alien audience. Beneath the applause, questions linger about what truly drives Luka — and whether winning was ever the real objective.'}
+    ],
+    relationships:[
+      {name:'Hyuna', type:'Complicated', desc:'A shared past that hints at history far deeper than rivalry. Hyuna appears to be one of the few who knows what lies beneath Luka\'s controlled exterior.'},
+      {name:'Till', type:'Studied Target', desc:'Observed Till extensively. Understood his trauma triggers and emotional blind spots with clinical precision.'},
+      {name:'Anakt Garden', type:'Product Of', desc:'Shaped by the garden\'s system into something that may have exceeded its original design parameters.'}
+    ],
+    quotes:[
+      {text:'You were always so easy to read.', context:'During Round 6 performance'},
+      {text:'I don\'t sing for them. I sing because I have to.', context:'Unknown origin, possibly pre-garden'},
+      {text:'Perfection is just another word for control.', context:'Alleged statement to garden staff'}
+    ],
+    hiddenLore:[
+      {title:'Theory: Luka\'s True Motivation', text:'Some believe Luka doesn\'t perform for survival but for control. His behavior in Anakt Garden suggests he learned early that emotions are weapons — and he may be trying to prove something to himself, not the aliens.'},
+      {title:'Anomaly Report', text:'His vocal range exceeds parameters considered normal even for Anakt Garden graduates. Three separate evaluations flagged anomalous readings. Was he modified beyond standard protocols?'},
+      {title:'Connection Note', text:'Hyuna\'s reaction upon seeing Luka perform was not surprise — it was resignation. She expected this. What did she already know?'}
+    ]
+  },
+  {
+    id:'hyuna', name:'Hyuna', role:'Rebel / Former Contestant', status:'Alive',
+    statusClass:'status-alive', statusIcon:'fa-circle',
+    tags:[{text:'Rebellious',cls:'tag-red'},{text:'Fierce',cls:'tag-cyan'},{text:'Determined',cls:'tag-purple'}],
+    descriptor:'The one who refused to sing on command',
+    image:'https://picsum.photos/seed/als-hyuna-v3/400/520.jpg',
+    quote:'"I won\'t be your puppet anymore."',
+    identity:{
+      'Full Name':'Hyuna',
+      'Alias':'The Defector',
+      'Round':'Unknown (possibly escaped before assignment)',
+      'Affiliation':'Independent / Anti-system',
+      'Vocal Style':'Raw, powerful, uncontrolled by design',
+      'Notes':'One of the few known to have actively resisted the Anakt Garden system. Her current whereabouts and activities remain partially obscured.'
+    },
+    lore:[
+      {event:'Anakt Garden — Early Years', desc:'Showed promise as a vocalist but displayed concerning levels of independence and emotional resistance. Staff noted she "refused to bond with assigned partners."'},
+      {event:'Discovery of Truth', desc:'At some point, Hyuna learned the true nature of Alien Stage — that it was never a competition but an execution disguised as entertainment. This knowledge transformed her.'},
+      {event:'Escape', desc:'Managed to leave the Anakt Garden system through methods not fully documented. Her escape is considered anomalous by system standards.'},
+      {event:'Current Activity', desc:'Now operates outside the system, seemingly working to expose or dismantle it. Her connection to Luka suggests her mission may be personal as well as ideological.'}
+    ],
+    relationships:[
+      {name:'Luka', type:'Shared Past', desc:'Their connection runs deep — possibly from their time in Anakt Garden together. Hyuna\'s knowledge of the real Luka suggests intimacy, not just observation.'},
+      {name:'The System', type:'Enemy', desc:'Actively opposes the alien entertainment structure. Views the rounds as murders, not performances.'}
+    ],
+    quotes:[
+      {text:'I won\'t be your puppet anymore.', context:'During her escape from Anakt Garden'},
+      {text:'You think those stages are about talent? They\'re about who breaks last.', context:'Unknown conversation'},
+      {text:'I remember everything they tried to erase.', context:'Alleged statement to another escapee'}
+    ],
+    hiddenLore:[
+      {title:'Theory: Hyuna Witnessed a Round', text:'Some evidence suggests Hyuna may have witnessed an actual Alien Stage round before her escape — possibly one involving someone she knew. This could explain the intensity of her opposition.'},
+      {title:'Redacted File', text:'Portions of Hyuna\'s Anakt Garden records have been intentionally destroyed. What was removed — and by whom? If the aliens control the records, why would they erase rather than preserve?'},
+      {title:'Connection Note', text:'Her fighting style, when observed, mirrors techniques taught in the garden\'s "compliance" program — but inverted. She turned their tools against them.'}
+    ]
+  },
+  {
+    id:'ivan', name:'Ivan', role:'Round 5 Contestant', status:'Deceased',
+    statusClass:'status-deceased', statusIcon:'fa-circle',
+    tags:[{text:'Devoted',cls:'tag-cyan'},{text:'Tragic',cls:'tag-red'},{text:'Obsessive',cls:'tag-purple'}],
+    descriptor:'Love expressed only in silence',
+    image:'https://picsum.photos/seed/als-ivan-v3/400/520.jpg',
+    quote:'"I never wanted you to look at me. I just wanted you to exist."',
+    identity:{
+      'Full Name':'Ivan',
+      'Alias':'None',
+      'Round':'Round 5',
+      'Affiliation':'Anakt Garden Graduate',
+      'Vocal Style':'Controlled passion, deliberately restrained',
+      'Notes':'Known for an intense, one-sided devotion that defined his entire existence within the system. His final performance has been the subject of extensive fan analysis.'
+    },
+    lore:[
+      {event:'Anakt Garden — Bonding', desc:'Developed an intense attachment to a fellow contestant during their time in the garden. This bond was notably one-sided — Ivan observed from a distance, never directly expressing his feelings.'},
+      {event:'Pre-Round 5', desc:'Showed unusual calmness before the round. Other contestants noted he seemed to have already made peace with his outcome, though none understood why.'},
+      {event:'Round 5 — Performance', desc:'His performance was hauntingly beautiful — described by witnesses as a love song that was also a farewell. The emotional weight of his vocals affected even the alien audience.'},
+      {event:'After Round 5', desc:'Ivan did not survive Round 5. The circumstances of his loss remain analyzed by fans who believe his performance contained deliberate choices that sealed his fate.'}
+    ],
+    relationships:[
+      {name:'Till', type:'Devotion', desc:'The center of Ivan\'s world. Ivan\'s love was quiet, distant, and all-consuming. He never asked for it to be returned — only for Till to keep existing.'},
+      {name:'Luka', type:'Unknown', desc:'Any direct connection remains speculative. Their paths may have crossed in Anakt Garden.'}
+    ],
+    quotes:[
+      {text:'I never wanted you to look at me. I just wanted you to exist.', context:'Interpreted from Round 5 performance'},
+      {text:'Some things are louder when you don\'t say them.', context:'Unknown origin'},
+      {text:'If I could choose how to be remembered... it would be as someone who loved quietly.', context:'Alleged garden journal entry'}
+    ],
+    hiddenLore:[
+      {title:'Theory: Ivan Let Till Win', text:'Close analysis of Round 5 suggests Ivan made deliberate structural choices in his performance — moments where he could have pushed harder but didn\'t. Was his defeat a sacrifice?'},
+      {title:'Garden Surveillance Note', text:'Security logs show Ivan spent 847 recorded instances observing Till from doorways, corridors, and garden areas — always just outside the frame. Staff classified this as "harmless fixation."'},
+      {title:'Posthumous Anomaly', text:'Three days after Round 5, a garden terminal displayed a single unsent message in Ivan\'s file. The message was deleted before it could be read. Its metadata shows only two characters: a name.'}
+    ]
+  },
+  {
+    id:'till', name:'Till', role:'Round 5 Contestant', status:'Unknown',
+    statusClass:'status-unknown', statusIcon:'fa-circle',
+    tags:[{text:'Rebellious',cls:'tag-red'},{text:'Traumatized',cls:'tag-purple'},{text:'Resilient',cls:'tag-cyan'}],
+    descriptor:'A voice forged through pain',
+    image:'https://picsum.photos/seed/als-till-v3/400/520.jpg',
+    quote:'"I sing because it\'s the only thing they haven\'t taken from me."',
+    identity:{
+      'Full Name':'Till',
+      'Alias':'None',
+      'Round':'Round 5',
+      'Affiliation':'Anakt Garden Graduate',
+      'Vocal Style':'Raw, unpolished, emotionally volatile',
+      'Notes':'Despite his trauma, Till possesses a naturally powerful voice that the system struggled to fully control. His defiance made him both a problem and a fascination for garden staff.'
+    },
+    lore:[
+      {event:'Anakt Garden — Resistance', desc:'From early on, Till resisted the garden\'s conditioning. Unlike others who gradually complied, Till fought — sometimes physically. This made him a "difficult subject" in official records.'},
+      {event:'Trauma History', desc:'Subjected to harsher disciplinary measures than most contestants. These experiences left visible and invisible scars that shaped both his personality and his vocal style.'},
+      {event:'Round 5', desc:'Forced to perform against Ivan — the one person whose presence brought him something like stability. The round devastated him, regardless of the outcome.'},
+      {event:'Current Status', desc:'Till\'s fate after Round 5 remains the subject of intense speculation. Official records are inconsistent, leading many to believe his story may not be over.'}
+    ],
+    relationships:[
+      {name:'Ivan', type:'Complicated', desc:'Till never fully understood the depth of Ivan\'s devotion. Their dynamic was marked by Till\'s obliviousness and Ivan\'s deliberate distance.'},
+      {name:'Luka', type:'Targeted By', desc:'Luka studied Till as a psychological subject. The predatory nature of this observation adds another layer to Till\'s trauma.'},
+      {name:'Anakt Garden Staff', type:'Adversarial', desc:'Till was one of the few contestants who actively defied staff authority. This resistance came at great personal cost.'}
+    ],
+    quotes:[
+      {text:'I sing because it\'s the only thing they haven\'t taken from me.', context:'Response to garden staff questioning'},
+      {text:'Don\'t touch me. Don\'t come near me. Just... stay there.', context:'To Ivan, during a garden interaction'},
+      {text:'You think I don\'t know what this stage is? I know. I\'ve always known.', context:'Alleged pre-round outburst'}
+    ],
+    hiddenLore:[
+      {title:'Theory: Till Will Return', text:'The ambiguity around Till\'s post-Round 5 status is unusual. Most contestant outcomes are definitively recorded. The gap in his file may be intentional — either by the system or by someone protecting him.'},
+      {title:'Disciplinary Record Excerpt', text:'"Subject shows extraordinary resistance to emotional conditioning. Recommend increased isolation protocol." — This recommendation was approved and implemented for 14 consecutive months.'},
+      {title:'Connection Note', text:'Till\'s vocal patterns under stress show an uncanny similarity to a specific frequency range that the aliens use in their communication systems. Coincidence — or something more?'}
+    ]
+  },
+  {
+    id:'mizi', name:'Mizi', role:'Round 4 Contestant', status:'Alive',
+    statusClass:'status-alive', statusIcon:'fa-circle',
+    tags:[{text:'Hopeful',cls:'tag-cyan'},{text:'Innocent',cls:'tag-purple'},{text:'Shattered',cls:'tag-red'}],
+    descriptor:'A light that learned how dark the stage could be',
+    image:'https://picsum.photos/seed/als-mizi-v3/400/520.jpg',
+    quote:'"I thought if I sang beautifully enough, we\'d both be okay."',
+    identity:{
+      'Full Name':'Mizi',
+      'Alias':'None',
+      'Round':'Round 4',
+      'Affiliation':'Anakt Garden Graduate',
+      'Vocal Style':'Pure, uplifting, emotionally transparent',
+      'Notes':'Mizi entered the system with genuine optimism — a rare trait that made her both beloved and vulnerable. Her Round 4 experience fundamentally changed her.'
+    },
+    lore:[
+      {event:'Anakt Garden — The Bright One', desc:'Mizi was known as the most genuinely hopeful contestant. She formed a deep bond with another contestant and believed their connection could protect them both.'},
+      {event:'Round 4 — The Performance', desc:'Mizi sang with everything she had, pouring genuine love into her voice. What she didn\'t know — or refused to accept — was that the stage was designed to ensure only one could leave.'},
+      {event:'The Loss', desc:'Mizi survived Round 4. The person she sang for did not. The realization that her hope couldn\'t save them broke something fundamental in her.'},
+      {event:'After Round 4', desc:'No longer the same person. Those who\'ve observed her since describe a hollow version of the bright girl from the garden — someone who still sings, but the light behind it has changed.'}
+    ],
+    relationships:[
+      {name:'Sua', type:'Devastating Bond', desc:'Mizi\'s deepest connection in Anakt Garden. Sua was her anchor, her comfort, her reason to believe. Losing Sua didn\'t just hurt Mizi — it unmade her worldview.'},
+      {name:'The Stage', type:'Disillusioned', desc:'Mizi once believed in the beauty of performance. Now she understands what the stage truly is — and that understanding is its own prison.'}
+    ],
+    quotes:[
+      {text:'I thought if I sang beautifully enough, we\'d both be okay.', context:'Reflection after Round 4'},
+      {text:'She used to hum when she was happy. I can still hear it.', context:'About Sua'},
+      {text:'Hope is cruel. It makes you think you have a choice.', context:'Unknown context, post-Round 4'}
+    ],
+    hiddenLore:[
+      {title:'Theory: Sua Sacrificed Herself for Mizi', text:'Analysis of Round 4 suggests Sua may have deliberately held back her performance — ensuring Mizi would be judged the winner. If true, Sua\'s silence wasn\'t weakness but the ultimate act of love.'},
+      {title:'Audio Anomaly', text:'A faint secondary vocal track was detected in Mizi\'s Round 4 recording — too quiet for the audience to hear, but present in the raw feed. The frequency matches Sua\'s known vocal range. Was Sua harmonizing with Mizi in secret?'},
+      {title:'Psychological Assessment', text:'Post-Round 4 evaluation notes: "Subject displays symptoms consistent with complicated grief layered over institutional betrayal. Recommend monitoring but do not reassign." The word "again" was crossed out before "reassign."'}
+    ]
+  },
+  {
+    id:'sua', name:'Sua', role:'Round 4 Contestant', status:'Deceased',
+    statusClass:'status-deceased', statusIcon:'fa-circle',
+    tags:[{text:'Tragic',cls:'tag-red'},{text:'Selfless',cls:'tag-purple'},{text:'Gentle',cls:'tag-cyan'}],
+    descriptor:'A quiet love that spoke in the space between notes',
+    image:'https://picsum.photos/seed/als-sua-v3/400/520.jpg',
+    quote:'"Sing for me. Not for them — for me."',
+    identity:{
+      'Full Name':'Sua',
+      'Alias':'None',
+      'Round':'Round 4',
+      'Affiliation':'Anakt Garden Graduate',
+      'Vocal Style:'Ethereal, precise, emotionally restrained until the breaking point',
+      'Notes':'Sua\'s quiet demeanor masked a depth of feeling that only surfaced in her final performance. She remains one of the most discussed contestants in fan communities.'
+    },
+    lore:[
+      {event:'Anakt Garden — Silent Presence', desc:'Sua was the quiet one — always present, always watching over Mizi, never demanding attention. Her love was expressed in small gestures: saved seats, shared food, whispered songs at night.'},
+      {event:'Knowing the Truth', desc:'Evidence suggests Sua understood the true nature of Alien Stage before Round 4. If she knew, she carried that knowledge alone — protecting Mizi from it.'},
+      {event:'Round 4 — Final Performance', desc:'Sua\'s performance was beautiful and heartbreaking. Those who\'ve analyzed it note a deliberate quality — as if every note was chosen, not for the judges, but for Mizi.'},
+      {event:'Round 4 — Conclusion', desc:'Sua did not survive Round 4. Her loss devastated Mizi and sent ripples through the fan community that persist to this day.'}
+    ],
+    relationships:[
+      {name:'Mizi', type:'Everything', desc:'Mizi was Sua\'s entire world. Every decision Sua made in the garden — and on the stage — was filtered through one question: "Will this keep Mizi safe?"'},
+      {name:'The System', type:'Aware Opponent', desc:'Unlike others who were ignorant of the stage\'s true purpose, Sua may have known. She chose to play the game on her own terms.'}
+    ],
+    quotes:[
+      {text:'Sing for me. Not for them — for me.', context:'To Mizi, the night before Round 4'},
+      {text:'Some songs aren\'t meant to be heard by everyone.', context:'Unknown origin'},
+      {text:'If I could give you one thing, it would be the chance to keep singing.', context:'Interpreted from Round 4 performance'}
+    ],
+    hiddenLore:[
+      {title:'Theory: Sua Knew Her Fate', text:'Multiple data points suggest Sua was aware she would not survive Round 4. Her calmness beforehand, her final words to Mizi, and structural choices in her performance all point to someone who had already accepted her ending.'},
+      {title:'Pre-Round Recording', desc:'A personal recording device was found in Sua\'s belongings after Round 4. It contained a single track: 47 seconds of humming. The melody has never been identified, but it matches no known song in the Anakt Garden curriculum. It was composed by Sua — for Mizi.'},
+      {title:'Staff Observation Note', desc:'"Subject Sua shows no signs of pre-round anxiety. When asked if she was nervous, she smiled and said: \'I already did what I came to do.\' This was not flagged as unusual at the time. In retrospect, it should have been."'}
+    ]
+  }
+];
+
+const galleryItems = [
+  {id:1, image:'https://picsum.photos/seed/als-g-luka1/600/400.jpg', caption:'Luka in the spotlight', artist:'@stellarvox', category:'luka'},
+  {id:2, image:'https://picsum.photos/seed/als-g-ivan1/600/400.jpg', caption:'Ivan watching from the shadows', artist:'@silentchord', category:'ivan'},
+  {id:3, image:'https://picsum.photos/seed/als-g-mizisua/600/400.jpg', caption:'Mizi and Sua — before the stage', artist:'@duet_memories', category:'mizi'},
+  {id:4, image:'https://picsum.photos/seed/als-g-hyuna1/600/400.jpg', caption:'Hyuna\'s rebellion', artist:'@freevoice_art', category:'hyuna'},
+  {id:5, image:'https://picsum.photos/seed/als-g-till1/600/400.jpg', caption:'Till — unbroken', artist:'@raw_frequency', category:'till'},
+  {id:6, image:'https://picsum.photos/seed/als-g-sua1/600/400.jpg', caption:'Sua\'s last song', artist:'@ethereal_echo', category:'sua'},
+  {id:7, image:'https://picsum.photos/seed/als-g-au1/600/400.jpg', caption:'AU: Modern Idol Mizi', artist:'@altstage_fan', category:'au'},
+  {id:8, image:'https://picsum.photos/seed/als-g-au2/600/400.jpg', caption:'AU: Sci-fi Opera Luka', artist:'@neonaria', category:'au'},
+  {id:9, image:'https://picsum.photos/seed/als-g-ivan2/600/400.jpg', caption:'Ivan — Round 5 performance', artist:'@fade_to_black', category:'ivan'},
+  {id:10, image:'https://picsum.photos/seed/als-g-au3/600/400.jpg', caption:'AU: Post-apocalyptic Till and Ivan', artist:'@wasteland_voices', category:'au'},
+  {id:11, image:'https://picsum.photos/seed/als-g-luka2/600/400.jpg', caption:'Luka — behind the mask', artist:'@calculated_art', category:'luka'},
+  {id:12, image:'https://picsum.photos/seed/als-g-au4/600/400.jpg', caption:'AU: Coffee Shop AU — All Characters', artist:'@brewed_memories', category:'au'}
+];
+
+const theories = [
+  {
+    id:'t1', title:'Anakt Garden is a Breeding Ground, Not a School',
+    teaser:'The "garden" was never about education — it was about manufacturing performers with specific emotional profiles.',
+    full:'Anakt Garden selects children not for talent but for emotional capacity — specifically, the ability to form deep attachments. This isn\'t accidental. The aliens who run Alien Stage have discovered that the most compelling performances come from singers who have something real to lose. By raising contestants in an environment that forces bonds, then pitting them against each other, the system ensures maximum emotional devastation — which translates to maximum entertainment value. The "graduation" ceremony isn\'t a commencement. It\'s a harvest.',
+    evidence:'Contestant bonding patterns are artificially encouraged through shared isolation, paired living assignments, and the systematic elimination of outside attachments. Garden staff files reference "emotional yield metrics."'
+  },
+  {
+    id:'t2', title:'The Rounds Mirror Stages of Grief',
+    teaser:'Each round corresponds to a phase of the grieving process — and the audience is being led through it deliberately.',
+    full:'If you map the known rounds against the five stages of grief, a disturbing pattern emerges. Each round\'s emotional tone and outcome align with a specific stage: denial (refusing to believe the stage is real), anger (rebellion against the system), bargaining (trying to find a way out through performance), depression (the realization that there is no escape), and acceptance (performing with full knowledge of what the stage means). This suggests the alien audience isn\'t just watching for entertainment — they\'re experiencing a curated emotional journey, with human lives as the medium.',
+    evidence:'Round outcomes show a progressive darkening in tone. Early rounds feature hope and denial; later rounds feature resignation and full awareness. The structural progression is too consistent to be accidental.'
+  },
+  {
+    id:'t3', title:'Ivan\'s Round 5 Performance Was a Confession',
+    teaser:'He wasn\'t trying to win. He was saying everything he never said in life — knowing it would be the last time.',
+    full:'Ivan spent his entire time in Anakt Garden loving Till from a distance — watching, protecting, never speaking. When Round 5 forced them against each other, Ivan didn\'t perform to impress the judges. He performed to finally be heard. Every note, every dynamic shift, every moment of restraint followed by release — it was a love letter delivered in the only language the stage allowed. He chose to lose because winning would have meant Till\'s death, and dying meant his song would be his final, unfiltered truth. Ivan didn\'t sacrifice himself for Till\'s survival. He used his death as a microphone.',
+    evidence:'Structural analysis of Ivan\'s Round 5 performance reveals deliberate choices that reduced his technical score while maximizing emotional impact — choices that only make sense if the performance was aimed at Till, not the judges.'
+  },
+  {
+    id:'t4', title:'Sua Harmonized With Mizi During Round 4',
+    teaser:'A hidden vocal track suggests Sua was singing with Mizi — not against her — in the final moments.',
+    full:'Raw audio analysis of the Round 4 recording reveals a faint secondary vocal track beneath Mizi\'s primary performance. The frequency, timbre, and phrasing match Sua\'s known vocal profile. This track was not present in the broadcast version — only in the raw stage feed. If Sua was harmonizing with Mizi rather than competing against her, it recontextualizes the entire round. Sua wasn\'t trying to win. She was trying to accompany Mizi — to make her performance stronger, more beautiful, more likely to be judged favorably. She turned a competition into a duet and paid for it with her life.',
+    evidence:'The secondary track begins approximately 2 minutes and 14 seconds into the performance — precisely when Mizi\'s vocals show signs of emotional strain. Sua\'s harmony stabilizes the pitch. This is not coincidence.'
+  },
+  {
+    id:'t5', title:'Till Is Being Kept for a Future Round',
+    teaser:'His uncertain status isn\'t an oversight — it\'s a deliberate hold. The system isn\'t done with him yet.',
+    full:'Every other contestant\'s post-round status is clearly documented — alive and reassigned, or deceased. Till is the only one with an ambiguous outcome. This gap in the records is suspicious for a system that meticulously catalogs everything. The theory: Till is being held in reserve for a specific future round — possibly a special event or a match against a particular opponent. His rebellious nature makes him "entertainment value" that the system doesn\'t want to waste on a standard round. Someone — or something — decided Till is too valuable to use normally.',
+    evidence:'File gaps for Till span exactly the period between Round 5 and the next known round date. The timing suggests active intervention rather than administrative error. Additionally, Till\'s profile was accessed 47 times in the week after Round 5 — far more than any other contestant\'s file.'
+  },
+  {
+    id:'t6', title:'Luka Can Hear What the Aliens Hear',
+    teaser:'His unsettling precision isn\'t just talent — it\'s feedback. He\'s somehow connected to the alien sensory system.',
+    full:'Luka\'s performances are described as "suffocatingly perfect" — not just technically excellent but emotionally targeted with an accuracy that borders on supernatural. He knows exactly which notes will break his audience, which pauses will create maximum tension, which dynamics will trigger specific emotional responses. How? The theory suggests Luka has some form of sensory connection to the alien perception system — he can feel, in real-time, how his audience is reacting, and adjusts accordingly. This would explain why his performances feel less like art and more like surgery. He\'s not guessing what they want. He knows.',
+    evidence:'Luka\'s mid-performance adjustments correlate with documented alien audience biometric responses with a lag of less than 0.3 seconds — faster than any human could consciously process visual or auditory feedback. This is not normal.'
+  }
+];
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════════ */
+let currentPage = 'home';
+let explorerMode = false;
+
+function navigateTo(page, data) {
+  // Deactivate explorer mode when leaving detail
+  if (page !== 'detail') {
+    disableExplorerMode();
+  }
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+  // Show target page
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    // Small delay for re-trigger animation
+    requestAnimationFrame(() => {
+      target.classList.add('active');
+    });
+  }
+  // Update nav links
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.dataset.page === page);
+  });
+  currentPage = page;
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Render dynamic content
+  if (page === 'characters') renderCharactersPage();
+  if (page === 'detail' && data) renderCharacterDetail(data);
+  if (page === 'gallery') renderGalleryPage();
+  if (page === 'theories') renderTheoriesPage();
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('open');
+}
+
+/* ══════════════════════════════════════════
+   RENDER: HOME
+   ══════════════════════════════════════════ */
+function renderHome() {
+  // Featured characters (first 4)
+  const featured = characters.slice(0, 4);
+  document.getElementById('featuredChars').innerHTML = featured.map(c => charCardHTML(c)).join('');
+
+  // Home gallery (3 items)
+  document.getElementById('homeGallery').innerHTML = galleryItems.slice(0, 3).map(g => galleryItemHTML(g)).join('');
+
+  // Home theories (2 teasers)
+  document.getElementById('homeTheories').innerHTML = theories.slice(0, 2).map(t => `
+    <div class="theory-card">
+      <div class="theory-header" onclick="navigateTo('theories')">
+        <div>
+          <div class="theory-title">${t.title}</div>
+          <div class="theory-teaser">${t.teaser}</div>
+        </div>
+        <i class="fas fa-chevron-right" style="color:var(--accent-red);margin-top:8px;"></i>
+      </div>
+    </div>
+  `).join('');
+
+  // Typewriter effect
+  typewriterEffect();
+}
+
+function charCardHTML(c) {
+  return `
+    <div class="char-card" onclick="navigateTo('detail','${c.id}')">
+      <img class="char-card-img" src="${c.image}" alt="${c.name}" loading="lazy">
+      <div class="char-card-overlay"></div>
+      <div class="char-card-body">
+        <div class="char-card-name">${c.name}</div>
+        <div class="char-card-desc">${c.descriptor}</div>
+        <div class="char-card-tags">
+          ${c.tags.slice(0,2).map(t => `<span class="tag ${t.cls}">${t.text}</span>`).join('')}
+        </div>
+        <div class="char-card-quote">${c.quote}</div>
+      </div>
+    </div>
+  `;
+}
+
+function galleryItemHTML(g) {
+  return `
+    <div class="gallery-item" data-category="${g.category}">
+      <img src="${g.image}" alt="${g.caption}" loading="lazy">
+      <div class="gallery-caption"><strong>${g.caption}</strong> — ${g.artist}</div>
+    </div>
+  `;
+}
+
+function typewriterEffect() {
+  const text = 'An archive of voices, memories, and what was lost.';
+  const el = document.getElementById('heroSubtitle');
+  el.innerHTML = '<span class="cursor"></span>';
+  let i = 0;
+  const interval = setInterval(() => {
+    if (i < text.length) {
+      el.innerHTML = text.substring(0, i+1) + '<span class="cursor"></span>';
+      i++;
+    } else {
+      clearInterval(interval);
+      // Keep cursor blinking for a moment then hide
+      setTimeout(() => {
+        el.innerHTML = text;
+      }, 3000);
+    }
+  }, 50);
+}
+
+/* ══════════════════════════════════════════
+   RENDER: CHARACTERS PAGE
+   ══════════════════════════════════════════ */
+function renderCharactersPage() {
+  const grid = document.getElementById('allChars');
+  grid.innerHTML = characters.map(c => charCardHTML(c)).join('');
+  document.getElementById('charSearch').value = '';
+}
+
+function filterCharacters() {
+  const query = document.getElementById('charSearch').value.toLowerCase();
+  const cards = document.querySelectorAll('#allChars .char-card');
+  cards.forEach(card => {
+    const name = card.querySelector('.char-card-name').textContent.toLowerCase();
+    const desc = card.querySelector('.char-card-desc').textContent.toLowerCase();
+    const show = name.includes(query) || desc.includes(query);
+    if (!show) {
+      card.style.opacity = '0';
+      card.style.transform = 'scale(0.9)';
+      setTimeout(() => { card.style.display = 'none'; }, 300);
+    } else {
+      card.style.display = '';
+      requestAnimationFrame(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+      });
+    }
+  });
+}
+
+/* ══════════════════════════════════════════
+   RENDER: CHARACTER DETAIL
+   ══════════════════════════════════════════ */
+function renderCharacterDetail(id) {
+  const c = characters.find(ch => ch.id === id);
+  if (!c) return;
+
+  const container = document.getElementById('detailContent');
+  container.innerHTML = `
+    <button class="detail-back" onclick="navigateTo('characters')">
+      <i class="fas fa-arrow-left"></i> Back to Characters
+    </button>
+
+    <div class="detail-hero">
+      <div class="detail-img-wrap">
+        <img class="detail-img" src="${c.image}" alt="${c.name}">
+        <div class="detail-img-gradient"></div>
+      </div>
+      <div class="detail-info">
+        <div class="detail-name">${c.name}</div>
+        <div class="detail-role">${c.role}</div>
+        <div class="detail-status ${c.statusClass}">
+          <i class="fas ${c.statusIcon}" style="font-size:0.5rem;"></i> ${c.status}
+        </div>
+        <div class="detail-tags">
+          ${c.tags.map(t => `<span class="tag ${t.cls}">${t.text}</span>`).join('')}
+        </div>
+        <div class="detail-quote">${c.quote}</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(this,'tab-identity')">
+        <i class="fas fa-id-card" style="margin-right:6px;"></i>Identity
+      </button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-lore')">
+        <i class="fas fa-scroll" style="margin-right:6px;"></i>Lore
+      </button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-relations')">
+        <i class="fas fa-link" style="margin-right:6px;"></i>Relationships
+      </button>
+      <button class="tab-btn" onclick="switchTab(this,'tab-quotes')">
+        <i class="fas fa-quote-left" style="margin-right:6px;"></i>Quotes
+      </button>
+    </div>
+
+    <!-- Identity Tab -->
+    <div class="tab-panel active" id="tab-identity">
+      <div class="id-table">
+        ${Object.entries(c.identity).map(([k,v]) => `
+          <div class="id-row">
+            <div class="id-label">${k}</div>
+            <div class="id-value">${v}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Lore Tab -->
+    <div class="tab-panel" id="tab-lore">
+      <div class="timeline">
+        ${c.lore.map(l => `
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div class="timeline-title">${l.event}</div>
+            <div class="timeline-desc">${l.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Relationships Tab -->
+    <div class="tab-panel" id="tab-relations">
+      <div class="rel-grid">
+        ${c.relationships.map(r => `
+          <div class="rel-card" onclick="${r.name !== 'Anakt Garden Staff' && r.name !== 'The System' && r.name !== 'The Stage' && r.name !== 'Anakt Garden' ? `navigateTo('detail','${r.name.toLowerCase()}')` : ''}">
+            <div class="rel-name">${r.name}</div>
+            <div class="rel-type">${r.type}</div>
+            <div class="rel-desc">${r.desc}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- Quotes Tab -->
+    <div class="tab-panel" id="tab-quotes">
+      ${c.quotes.map(q => `
+        <div class="quote-block">
+          <div class="quote-text">${q.text}</div>
+          <div class="quote-context">— ${q.context}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Explorer Mode -->
+    <button class="explorer-toggle" id="explorerBtn" onclick="toggleExplorerMode()">
+      <i class="fas fa-satellite-dish"></i>
+      <span>Enable Explorer Mode</span>
+      <i class="fas fa-chevron-right" style="margin-left:auto;transition:transform 0.3s;" id="explorerChevron"></i>
+    </button>
+
+    <div id="hiddenLoreContainer">
+      ${c.hiddenLore.map(h => `
+        <div class="hidden-lore">
+          <div class="lore-block">
+            <div class="lore-block-title">
+              <i class="fas fa-lock-open"></i> ${h.title}
+            </div>
+            <div class="lore-block-text">${h.text}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function switchTab(btn, panelId) {
+  // Deactivate all tabs in same parent
+  btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Deactivate all panels in same container
+  const container = btn.parentElement.parentElement;
+  container.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+function toggleExplorerMode() {
+  explorerMode = !explorerMode;
+  const btn = document.getElementById('explorerBtn');
+  const chevron = document.getElementById('explorerChevron');
+  const badge = document.getElementById('explorerBadge');
+  const scanline = document.getElementById('scanlineOverlay');
+  const hiddenLore = document.querySelectorAll('#hiddenLoreContainer .hidden-lore');
+
+  if (explorerMode) {
+    btn.classList.add('active');
+    btn.querySelector('span').textContent = 'Disable Explorer Mode';
+    chevron.style.transform = 'rotate(90deg)';
+    badge.classList.add('visible');
+    scanline.classList.add('active');
+    hiddenLore.forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 200);
+    });
+  } else {
+    disableExplorerMode();
+  }
+}
+
+function disableExplorerMode() {
+  explorerMode = false;
+  const btn = document.getElementById('explorerBtn');
+  if (btn) {
+    btn.classList.remove('active');
+    const span = btn.querySelector('span');
+    if (span) span.textContent = 'Enable Explorer Mode';
+    const chevron = document.getElementById('explorerChevron');
+    if (chevron) chevron.style.transform = 'rotate(0deg)';
+  }
+  const badge = document.getElementById('explorerBadge');
+  if (badge) badge.classList.remove('visible');
+  const scanline = document.getElementById('scanlineOverlay');
+  if (scanline) scanline.classList.remove('active');
+  document.querySelectorAll('.hidden-lore').forEach(el => el.classList.remove('visible'));
+}
+
+/* ══════════════════════════════════════════
+   RENDER: GALLERY
+   ══════════════════════════════════════════ */
+const galleryCategories = ['all','luka','hyuna','ivan','till','mizi','sua','au'];
+
+function renderGalleryPage() {
+  // Filters
+  document.getElementById('galleryFilters').innerHTML = galleryCategories.map(cat => `
+    <button class="filter-btn ${cat==='all'?'active':''}" onclick="filterGallery('${cat}',this)">
+      ${cat === 'all' ? 'All' : cat === 'au' ? 'AU' : cat.charAt(0).toUpperCase() + cat.slice(1)}
+    </button>
+  `).join('');
+
+  // Grid
+  document.getElementById('galleryGrid').innerHTML = galleryItems.map(g => galleryItemHTML(g)).join('');
+}
+
+function filterGallery(category, btn) {
+  // Update active filter
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  const items = document.querySelectorAll('#galleryGrid .gallery-item');
+  items.forEach(item => {
+    const cat = item.dataset.category;
+    if (category === 'all' || cat === category) {
+      item.classList.remove('filtered-out');
+      item.style.display = '';
+    } else {
+      item.style.opacity = '0';
+      item.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        item.classList.add('filtered-out');
+      }, 300);
+    }
+  });
+}
+
+/* ══════════════════════════════════════════
+   RENDER: THEORIES
+   ══════════════════════════════════════════ */
+function renderTheoriesPage() {
+  document.getElementById('theoryList').innerHTML = theories.map(t => `
+    <div class="theory-card">
+      <div class="theory-header" onclick="toggleTheory('${t.id}')">
+        <div style="flex:1;">
+          <div class="theory-title">${t.title}</div>
+          <div class="theory-teaser">${t.teaser}</div>
+        </div>
+        <button class="theory-toggle" id="toggle-${t.id}" aria-label="Expand theory">
+          <i class="fas fa-chevron-down"></i>
+        </button>
+      </div>
+      <div class="theory-body" id="body-${t.id}">
+        <div class="theory-body-inner">
+          <p>${t.full}</p>
+          <div class="theory-evidence">
+            <strong>Supporting Evidence:</strong><br>
+            ${t.evidence}
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTheory(id) {
+  const body = document.getElementById('body-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+/* ══════════════════════════════════════════
+   STARFIELD
+   ══════════════════════════════════════════ */
+function initStarfield() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars = [], mouseX = 0, mouseY = 0;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Track mouse for parallax
+  document.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / w - 0.5) * 2;
+    mouseY = (e.clientY / h - 0.5) * 2;
+  });
+
+  // Create stars
+  const STAR_COUNT = 220;
+  for (let i = 0; i < STAR_COUNT; i++) {
+    stars.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      size: Math.random() * 1.8 + 0.3,
+      opacity: Math.random() * 0.7 + 0.3,
+      speed: Math.random() * 0.15 + 0.02,
+      parallax: Math.random() * 0.5 + 0.1,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinkleOffset: Math.random() * Math.PI * 2,
+      color: Math.random() > 0.92 ? (Math.random() > 0.5 ? '0,212,255' : '255,68,102') : '255,255,255'
+    });
+  }
+
+  let time = 0;
+  function animate() {
+    ctx.clearRect(0, 0, w, h);
+    time += 0.016;
+
+    for (const s of stars) {
+      s.y -= s.speed;
+      if (s.y < -5) { s.y = h + 5; s.x = Math.random() * w; }
+
+      const twinkle = Math.sin(time * s.twinkleSpeed * 60 + s.twinkleOffset) * 0.3 + 0.7;
+      const px = s.x + mouseX * s.parallax * 20;
+      const py = s.y + mouseY * s.parallax * 20;
+
+      ctx.beginPath();
+      ctx.arc(px, py, Math.max(0.1, s.size), 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${s.color},${s.opacity * twinkle})`;
+      ctx.fill();
+
+      // Subtle glow for larger stars
+      if (s.size > 1.2) {
+        ctx.beginPath();
+        ctx.arc(px, py, Math.max(0.1, s.size * 3), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${s.color},${s.opacity * twinkle * 0.08})`;
+        ctx.fill();
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+
+  // Respect prefers-reduced-motion
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReduced) {
+    animate();
+  } else {
+    // Static render
+    for (const s of stars) {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, Math.max(0.1, s.size), 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${s.color},${s.opacity})`;
+      ctx.fill();
+    }
+  }
+}
+
+/* ══════════════════════════════════════════
+   SCROLL EFFECTS
+   ══════════════════════════════════════════ */
+function initScrollEffects() {
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  });
+}
+
+/* ══════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  initStarfield();
+  initScrollEffects();
+  renderHome();
+});
+</script>
+</body>
+</html>
